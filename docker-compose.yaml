@@ -1,4 +1,11 @@
 services:
+  web-app:
+    build:
+      context: ../cain-d2r-holygrail-react
+      dockerfile: Dockerfile
+    ports:
+      - "8080:5173"
+    
   records:
     build:
       context: .

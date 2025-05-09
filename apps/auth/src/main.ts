@@ -22,7 +22,7 @@ async function bootstrap() {
 
   // Enable CORS
   app.enableCors({
-    origin: 'http://localhost:5173', // Allow all origins (adjust this for production)
+    origin: 'http://localhost:8080', // Allow all origins (adjust this for production)
     credentials: true, // Allow cookies to be sent
   });
   
