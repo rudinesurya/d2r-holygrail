@@ -1,0 +1,103 @@
+services:
+  records:
+    build:
+      context: .
+      dockerfile: ./apps/records/Dockerfile
+      target: development
+    command: pnpm run start:dev records
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      mongo:
+        condition: service_started
+    env_file:
+      - ./apps/records/.env
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/usr/src/app
+
+  auth:
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    command: pnpm run start:dev auth
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      mongo:
+        condition: service_started
+    env_file:
+      - ./apps/auth/.env
+    ports:
+      - '3001:3001'
+    volumes:
+      - .:/usr/src/app
+
+  items:
+    build:
+      context: .
+      dockerfile: ./apps/items/Dockerfile
+      target: development
+    command: pnpm run start:dev items
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    env_file:
+      - ./apps/items/.env
+    ports:
+      - '3002:3002'
+    volumes:
+      - .:/usr/src/app
+
+  achievements:
+    build:
+      context: .
+      dockerfile: ./apps/achievements/Dockerfile
+      target: development
+    command: pnpm run start:dev achievements
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    env_file:
+      - ./apps/achievements/.env
+    ports:
+      - '3003:3003'
+    volumes:
+      - .:/usr/src/app
+
+  gateway:
+    build:
+      context: .
+      dockerfile: ./apps/gateway/Dockerfile
+      target: development
+    command: pnpm run start:dev gateway
+    depends_on:
+      - records
+    env_file:
+      - ./apps/gateway/.env
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - '3004:3004'
+
+  mongo:
+    image: 'mongo:6'
+    restart: no
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: d2r-holygrail
+    ports:
+      - 27017:27017
+
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - 5672:5672
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

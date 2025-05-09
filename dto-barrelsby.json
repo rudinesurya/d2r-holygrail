@@ -1,0 +1,11 @@
+{
+    "directory": "./libs/common/src/dto",
+    "delete": true,
+    "location": "top",
+    "include": [
+        ".*\\.ts$"
+    ],
+    "exclude": [
+        "index.ts"
+    ]
+}
