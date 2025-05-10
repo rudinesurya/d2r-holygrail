@@ -8,7 +8,7 @@ import { lastValueFrom } from 'rxjs';
 export class RecordsService {
   constructor(
     private readonly recordsRepository: RecordsRepository,
-    @Inject(ITEMS_SERVICE) private readonly itemsService: ClientProxy
+    @Inject(ITEMS_SERVICE) private readonly itemsService: ClientProxy,
   ) { }
 
   async create(
@@ -17,8 +17,8 @@ export class RecordsService {
   ) {
     const foundItem: ItemDto = await lastValueFrom(
       this.itemsService.send<ItemDto>('verify_item', {
-        itemName: createRecordDto.itemName
-      })
+        itemName: createRecordDto.itemName,
+      }),
     );
 
     if (!foundItem) {
@@ -32,12 +32,12 @@ export class RecordsService {
     return this.recordsRepository.create({ ...createRecordDto, itemName, itemType, itemQuality, timestamp, userId });
   }
 
-  async findAll() {
-    return this.recordsRepository.find({});
+  async findAll(sortOptions: Record<string, any> = {}, limit?: number) {
+    return this.recordsRepository.find({}, sortOptions, limit);
   }
 
-  async findAllByUser(userId: string) {
-    return this.recordsRepository.find({ userId });
+  async findAllByUser(userId: string, sortOptions: Record<string, any> = {}, limit?: number) {
+    return this.recordsRepository.find({ userId }, sortOptions, limit);
   }
 
   async findOne(_id: string) {
