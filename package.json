@@ -5,6 +5,10 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ],
   "scripts": {
     "generate-barrels": "barrelsby --config ./dto-barrelsby.json",
     "prebuild": "rimraf dist",
@@ -101,5 +105,6 @@
     "moduleNameMapper": {
       "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1"
     }
-  }
+  },
+  "packageManager": "yarn@4.9.1"
 }

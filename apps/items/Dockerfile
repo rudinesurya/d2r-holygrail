@@ -2,19 +2,21 @@ FROM node:alpine As development
 
 WORKDIR /usr/src/app
 
-COPY package.json ./
-COPY pnpm-lock.yaml ./
-COPY tsconfig.json tsconfig.json
-COPY nest-cli.json nest-cli.json
+# Copy the root package.json and yarn.lock to install workspace dependencies
+COPY ../../package.json ../../yarn.lock ./
 
-RUN npm install -g pnpm
+# Install Yarn globally
+RUN npm install -g yarn
 
-RUN pnpm install
+# Install all dependencies for the workspace
+RUN yarn install --frozen-lockfile
 
-COPY apps/items apps/items
-COPY libs libs
+# Copy only the necessary files for the items service
+COPY apps/items ./apps/items
+COPY libs ./libs
 
-RUN pnpm run build items
+# Build the items service
+RUN yarn workspace @cain-d2r-holygrail/items build
 
 FROM node:alpine as production
 
@@ -23,13 +25,15 @@ ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app
 
-COPY package.json ./
-COPY pnpm-lock.yaml ./
+# Copy the root package.json and yarn.lock for production dependencies
+COPY ../../package.json ../../yarn.lock ./
 
-RUN npm install -g pnpm
+# Install production dependencies
+RUN npm install -g yarn
+RUN yarn install --frozen-lockfile --production
 
-RUN pnpm install --prod
+# Copy the built files from the development stage
+COPY --from=development /usr/src/app/apps/items/dist ./dist
 
-COPY --from=development /usr/src/app/dist ./dist
-
-CMD ["node", "dist/apps/items/main"]
+# Set the default command
+CMD ["node", "dist/main"]
