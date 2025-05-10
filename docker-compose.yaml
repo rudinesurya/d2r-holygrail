@@ -14,7 +14,7 @@ services:
       context: .
       dockerfile: ./apps/records/Dockerfile
       target: development
-    command: yarn run start:dev records
+    command: pnpm run start:dev records
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -32,7 +32,7 @@ services:
       context: .
       dockerfile: ./apps/auth/Dockerfile
       target: development
-    command: yarn run start:dev auth
+    command: pnpm run start:dev auth
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -50,7 +50,7 @@ services:
       context: .
       dockerfile: ./apps/items/Dockerfile
       target: development
-    command: yarn run start:dev items
+    command: pnpm run start:dev items
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -66,7 +66,7 @@ services:
       context: .
       dockerfile: ./apps/achievements/Dockerfile
       target: development
-    command: yarn run start:dev achievements
+    command: pnpm run start:dev achievements
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -82,7 +82,7 @@ services:
       context: .
       dockerfile: ./apps/gateway/Dockerfile
       target: development
-    command: yarn run start:dev gateway
+    command: pnpm run start:dev gateway
     depends_on:
       - records
     env_file:
