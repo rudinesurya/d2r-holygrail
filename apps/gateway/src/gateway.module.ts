@@ -15,10 +15,6 @@ import { authContext } from './auth.context';
       useFactory: (configService: ConfigService) => ({
         server: {
           context: authContext,
-          cors: {
-            origin: ['http://localhost:8080'], // Add allowed origins here
-            credentials: true, // Allow cookies to be sent
-          },
         },
         gateway: {
           supergraphSdl: new IntrospectAndCompose({
