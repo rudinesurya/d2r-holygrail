@@ -28,7 +28,7 @@ export class RecordsController {
   @Get()
   @UseGuards(JwtAuthGuard)
   async findAll() {
-    return this.recordsService.findAll();
+    return this.recordsService.findAll({});
   }
 
   @Get(':id')

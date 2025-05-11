@@ -9,6 +9,7 @@ export class RecordsResolver {
     @Query(() => [RecordDto], { name: 'records' })
     async records(
         @Args('userId', { type: () => String, nullable: true }) userId?: string,
+        @Args('itemName', { type: () => String, nullable: true }) itemName?: string,
         @Args('sort', { type: () => String, nullable: true }) sort?: string, // Sort argument
         @Args('limit', { type: () => Number, nullable: true }) limit?: number, // Limit argument
     ): Promise<any[]> {
@@ -17,9 +18,15 @@ export class RecordsResolver {
                 ? { [sort.substring(1)]: -1 } // Descending order
                 : { [sort]: 1 } // Ascending order
             : {};
+
+        const filter: any = {};
         if (userId) {
-            return this.recordsService.findAllByUser(userId, sortOptions, limit);
+            filter.userId = userId;
         }
-        return this.recordsService.findAll(sortOptions, limit);
+        if (itemName) {
+            filter.itemName = itemName;
+        }
+
+        return this.recordsService.findAll(filter, sortOptions, limit);
     }
 }

@@ -32,12 +32,12 @@ export class RecordsService {
     return this.recordsRepository.create({ ...createRecordDto, itemName, itemType, itemQuality, timestamp, userId });
   }
 
-  async findAll(sortOptions: Record<string, any> = {}, limit?: number) {
-    return this.recordsRepository.find({}, sortOptions, limit);
+  async findAll(filter: any, sortOptions: Record<string, any> = {}, limit?: number) {
+    return this.recordsRepository.find(filter, sortOptions, limit);
   }
 
-  async findAllByUser(userId: string, sortOptions: Record<string, any> = {}, limit?: number) {
-    return this.recordsRepository.find({ userId }, sortOptions, limit);
+  async count(filter: any): Promise<number> {
+    return this.recordsRepository.count(filter);
   }
 
   async findOne(_id: string) {
