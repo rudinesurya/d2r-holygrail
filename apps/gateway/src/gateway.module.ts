@@ -27,6 +27,10 @@ import { authContext } from './auth.context';
                 name: 'items',
                 url: configService.getOrThrow('ITEMS_GRAPHQL_URL'),
               },
+              {
+                name: 'stash',
+                url: configService.getOrThrow('STASH_GRAPHQL_URL'),
+              },
             ],
           }),
           buildService({ url }) {
@@ -64,6 +68,7 @@ import { authContext } from './auth.context';
         RABBITMQ_URI: Joi.string().required(),
         RECORDS_GRAPHQL_URL: Joi.string().required(),
         ITEMS_GRAPHQL_URL: Joi.string().required(),
+        STASH_GRAPHQL_URL: Joi.string().required(),
       }),
     }),
     LoggerModule,

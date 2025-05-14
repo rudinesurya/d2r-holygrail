@@ -4,7 +4,7 @@ import { RecordDto } from '@app/common';
 
 @Resolver(() => RecordDto)
 export class RecordsResolver {
-    constructor(private readonly recordsService: RecordsService) { }
+    constructor(private readonly recordsService: RecordsService    ) { }
 
     @Query(() => [RecordDto], { name: 'records' })
     async records(

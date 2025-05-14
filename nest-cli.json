@@ -48,13 +48,13 @@
         "tsConfigPath": "apps/items/tsconfig.app.json"
       }
     },
-    "achievements": {
+    "stash": {
       "type": "application",
-      "root": "apps/achievements",
+      "root": "apps/stash",
       "entryFile": "main",
-      "sourceRoot": "apps/achievements/src",
+      "sourceRoot": "apps/stash/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/achievements/tsconfig.app.json"
+        "tsConfigPath": "apps/stash/tsconfig.app.json"
       }
     }
   },

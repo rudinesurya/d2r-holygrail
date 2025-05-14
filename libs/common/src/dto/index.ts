@@ -3,9 +3,11 @@
  */
 
 export * from "./item/item.dto";
+export * from "./stash/ledge.dto";
 export * from "./record/create-record.dto";
 export * from "./record/record.dto";
 export * from "./record/update-record.dto";
 export * from "./user/create-user.dto";
+export * from "./user/login-user.dto";
 export * from "./user/get-user.dto";
 export * from "./user/user.dto";

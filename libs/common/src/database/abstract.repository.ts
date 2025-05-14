@@ -1,5 +1,5 @@
 import { Logger, NotFoundException } from '@nestjs/common';
-import { FilterQuery, Model, Types, UpdateQuery } from 'mongoose';
+import { FilterQuery, Model, PipelineStage, Types, UpdateQuery } from 'mongoose';
 import { AbstractDocument } from './abstract.schema';
 
 export abstract class AbstractRepository<TDocument extends AbstractDocument> {
@@ -31,10 +31,12 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
   async findOneAndUpdate(
     filterQuery: FilterQuery<TDocument>,
     update: UpdateQuery<TDocument>,
+    options: { upsert?: boolean } = {}, // Add options parameter for upsert and other configurations
   ): Promise<TDocument> {
     const document = await this.model
       .findOneAndUpdate(filterQuery, update, {
-        new: true,
+        new: true, // Return the updated document
+        ...options
       })
       .lean<TDocument>(true);
 
@@ -66,5 +68,9 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
 
   async count(filterQuery: FilterQuery<TDocument>): Promise<number> {
     return this.model.countDocuments(filterQuery);
+  }
+
+  async aggregate(pipeline: PipelineStage[]): Promise<any[]> {
+    return this.model.aggregate(pipeline);
   }
 }

@@ -11,6 +11,8 @@ import {
 import { RecordsService } from './records.service';
 import { CurrentUser, JwtAuthGuard, Roles } from '@app/common';
 import { CreateRecordDto, UpdateRecordDto, UserDto } from '@app/common/dto';
+import { response } from 'express';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller('records')
 export class RecordsController {
@@ -22,19 +24,45 @@ export class RecordsController {
     @Body() createRecordDto: CreateRecordDto,
     @CurrentUser() user: UserDto,
   ) {
-    return this.recordsService.create(createRecordDto, user);
+    const record = await this.recordsService.create(createRecordDto, user);
+
+    return {
+      message: "Create Record Success",
+      data: {
+        record
+      }
+    }
   }
 
   @Get()
   @UseGuards(JwtAuthGuard)
   async findAll() {
-    return this.recordsService.findAll({});
+    const records = await this.recordsService.findAll({});
+
+    return {
+      message: "Get Records Success",
+      data: {
+        records
+      }
+    }
   }
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: string) {
-    return this.recordsService.findOne(id);
+    const record = this.recordsService.findOne(id);
+    if (!record) {
+      response.status(404).json({
+        message: "Get Record Failure"
+      });
+    }
+
+    return {
+      message: "Get Record Success",
+      data: {
+        record
+      }
+    }
   }
 
   @Patch(':id')
@@ -43,13 +71,42 @@ export class RecordsController {
     @Param('id') id: string,
     @Body() updateRecordDto: UpdateRecordDto,
   ) {
-    return this.recordsService.update(id, updateRecordDto);
+    const record = await this.recordsService.update(id, updateRecordDto);
+    if (!record) {
+      response.status(404).json({
+        message: "Update Record Failure"
+      });
+    }
+
+    return {
+      message: "Update Record Success",
+      data: {
+        record
+      }
+    }
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @Roles('Admin')
   async remove(@Param('id') id: string) {
-    return this.recordsService.remove(id);
+    const record = await this.recordsService.remove(id);
+    if (!record) {
+      response.status(404).json({
+        message: "Remove Record Failure"
+      });
+    }
+
+    return {
+      message: "Remove Record Success",
+      data: {
+        record
+      }
+    }
+  }
+
+  @MessagePattern('aggregate_records')
+  async aggregateRecords(@Payload() pipeline: any[]): Promise<any[]> {
+    return this.recordsService.aggregate(pipeline);
   }
 }

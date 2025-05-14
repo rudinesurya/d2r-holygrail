@@ -49,6 +49,8 @@ export class JwtAuthGuard implements CanActivate {
       req.Authentication ||
       req.authentication;
 
+      console.log(`jwt = ${jwt}`);
+
     if (!jwt) {
       throw new UnauthorizedException('Authentication token not found');
     }
@@ -61,6 +63,7 @@ export class JwtAuthGuard implements CanActivate {
       })
       .pipe(
         tap((res) => {
+          console.log(roles);
           if (roles) {
             for (const role of roles) {
               if (!res.roles?.includes(role)) {

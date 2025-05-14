@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import { Logger } from 'nestjs-pino';
 import { ItemsModule } from './items.module';
 import { Transport } from '@nestjs/microservices';
+import { UnauthorizedExceptionFilter } from '@app/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(ItemsModule);
@@ -17,6 +18,7 @@ async function bootstrap() {
     },
   });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalFilters(new UnauthorizedExceptionFilter());
   app.useLogger(app.get(Logger));
   app.use(cookieParser());
 

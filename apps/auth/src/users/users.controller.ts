@@ -10,12 +10,23 @@ export class UsersController {
 
   @Post()
   async createUser(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+    const user = await this.usersService.create(createUserDto);
+    return {
+      message: "Create User Success",
+      data: {
+        user: user
+      }
+    };
   }
 
   @Get()
   @UseGuards(JwtAuthGuard)
   async getUser(@CurrentUser() user: UserDto) {
-    return user;
+    return {
+      message: "Get User Success",
+      data: {
+        user: user
+      }
+    };
   }
 }

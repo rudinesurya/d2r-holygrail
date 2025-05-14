@@ -5,6 +5,7 @@ import { Transport } from '@nestjs/microservices';
 import cookieParser from 'cookie-parser';
 import { Logger } from 'nestjs-pino';
 import { AuthModule } from './auth.module';
+import { MongoExceptionFilter, UnauthorizedExceptionFilter } from '@app/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
@@ -18,6 +19,8 @@ async function bootstrap() {
   });
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalFilters(new UnauthorizedExceptionFilter());
+  app.useGlobalFilters(new MongoExceptionFilter());
   app.useLogger(app.get(Logger));
 
   // Enable CORS

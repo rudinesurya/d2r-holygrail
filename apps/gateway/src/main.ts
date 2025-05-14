@@ -3,11 +3,13 @@ import { GatewayModule } from './gateway.module';
 import { Logger } from 'nestjs-pino';
 import { ConfigService } from '@nestjs/config';
 import { setApp } from './app';
+import { UnauthorizedExceptionFilter } from '@app/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(GatewayModule);
   app.useLogger(app.get(Logger));
   const configService = app.get(ConfigService);
+  app.useGlobalFilters(new UnauthorizedExceptionFilter());
 
   // Enable CORS
   app.enableCors({

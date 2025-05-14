@@ -3,6 +3,7 @@ import { CreateRecordDto, ItemDto, ITEMS_SERVICE, UpdateRecordDto, UserDto } fro
 import { RecordsRepository } from './records.repository';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
+import { UnverifiedItemException } from './unverified-item-exception';
 
 @Injectable()
 export class RecordsService {
@@ -22,7 +23,7 @@ export class RecordsService {
     );
 
     if (!foundItem) {
-      throw new NotFoundException('Item verification failed');
+      throw new UnverifiedItemException('Item verification failed');
     }
 
     const timestamp = createRecordDto.dateOverride ? createRecordDto.dateOverride : new Date();
@@ -53,5 +54,9 @@ export class RecordsService {
 
   async remove(_id: string) {
     return this.recordsRepository.findOneAndDelete({ _id });
+  }
+
+  async aggregate(pipeline: any[]): Promise<any[]> {
+    return this.recordsRepository.aggregate(pipeline);
   }
 }

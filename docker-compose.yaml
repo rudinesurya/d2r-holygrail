@@ -3,6 +3,8 @@ services:
     build:
       context: ../cain-d2r-holygrail-react
       dockerfile: Dockerfile
+    env_file:
+      - ../cain-d2r-holygrail-react/.env
     ports:
       - "8080:5173"
     volumes:
@@ -61,17 +63,17 @@ services:
     volumes:
       - .:/usr/src/app
 
-  achievements:
+  stash:
     build:
       context: .
-      dockerfile: ./apps/achievements/Dockerfile
+      dockerfile: ./apps/stash/Dockerfile
       target: development
-    command: pnpm run start:dev achievements
+    command: pnpm run start:dev stash
     depends_on:
       rabbitmq:
         condition: service_healthy
     env_file:
-      - ./apps/achievements/.env
+      - ./apps/stash/.env
     ports:
       - '3003:3003'
     volumes:
